@@ -2,12 +2,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Kodepos.Components;
+namespace Kodepos;
 public partial class PosLeaflet : IAsyncDisposable
 {
     const string JSFile = "/Components/PosLeaflet.razor.js";
@@ -44,8 +41,8 @@ public partial class PosLeaflet : IAsyncDisposable
     {
         if (JSModule != null)
         {
-            var lat = float.Parse(Geo.Latitude ?? "");
-            var lng = float.Parse(Geo.Longitude ?? "");
+            var lat = float.Parse(Geo.Latitude ?? string.Empty);
+            var lng = float.Parse(Geo.Longitude ?? string.Empty);
             LatLng = LatLng with { Lat = lat, Lng = lng };
             var loc = new float[] { lat, lng };
             return await JSModule.InvokeAsync<IJSObjectReference>("initMap", loc);

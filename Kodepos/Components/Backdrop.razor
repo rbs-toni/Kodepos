@@ -1,0 +1,14 @@
+﻿@namespace Kodepos
+@inherits PosComponentBase
+
+@if (Visible)
+{
+    <div class="@ClassValue"
+         style="@Style"
+         id="@Id"
+         @onclick="@OnCloseHandlerAsync"
+         @oncontextmenu="@OnCloseHandlerAsync"
+         @oncontextmenu:preventDefault="true">
+            @ChildContent
+    </div>
+}

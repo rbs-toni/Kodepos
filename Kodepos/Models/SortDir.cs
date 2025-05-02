@@ -1,4 +1,5 @@
-﻿namespace Kodepos.Models;
+﻿
+namespace Kodepos.Models;
 public enum SortDir
 {
     Ascending,

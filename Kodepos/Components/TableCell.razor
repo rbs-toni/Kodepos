@@ -1,14 +1,12 @@
-﻿<td class="@ClassValue">
+﻿@namespace Kodepos
+@inherits PosComponentBase
+
+<td class="@ClassValue" id="@Id" @ref=Ref style="@Style" @attributes=Attributes>
     @ChildContent
 </td>
 
 @code {
     const string DefaultClass = "p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-0.5";
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    [Parameter]
-    public string? Class { get; set; }
 
     string? ClassValue => string.IsNullOrEmpty(Class) ? DefaultClass : Class + DefaultClass;
 }

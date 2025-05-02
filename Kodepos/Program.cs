@@ -13,6 +13,7 @@ public static class Program
 
         builder.Services.AddScoped<IGeoJSService, GeoJSService>();
         builder.Services.AddHttpClient<IGeoJSService>();
+        builder.Services.AddScoped<IDataConverter, DataConverter>();
 
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

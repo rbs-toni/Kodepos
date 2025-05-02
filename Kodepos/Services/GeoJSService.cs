@@ -21,7 +21,7 @@ class GeoJSService : IGeoJSService
 
     public async Task<string> GetIPAddressAsync(CancellationToken cancellationToken = default)
     {
-        var ipAddress =  await _httpClient.GetStringAsync("ip", cancellationToken);
+        var ipAddress = await _httpClient.GetStringAsync("ip", cancellationToken);
         return ipAddress.Trim();
     }
 }

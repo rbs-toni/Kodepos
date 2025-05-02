@@ -1,5 +1,11 @@
-﻿<TableHead>
-    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2" type="button" @onclick=OnClickHandler disabled="@_isLoading">
+﻿@namespace Kodepos
+
+<TableHead>
+    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 data-active:text-accent-foreground"
+            type="button"
+            disabled="@_isLoading"
+            data-active="@IsActive"
+            @onclick=OnClickHandler>
         @if (_isLoading)
         {
             <Icon Name="IconName.Loader" Class="animate-spin mr-2 h-4 w-4" />
@@ -17,6 +23,9 @@
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    [Parameter]
+    public bool IsActive { get; set; }
 
     void OnClickHandler()
     {

@@ -1,0 +1,15 @@
+﻿@namespace Kodepos
+@inherits PosComponentBase
+
+<label for="@For" class="@ClassValue" id="@Id" @ref=Ref @attributes=Attributes>
+    @ChildContent
+</label>
+
+@code {
+    [Parameter]
+    public string? For { get; set; }
+
+    const string DefaultClasses = "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
+
+    string? ClassValue => new CssBuilder().AddClass(Class).AddClass(DefaultClasses).Build();
+}

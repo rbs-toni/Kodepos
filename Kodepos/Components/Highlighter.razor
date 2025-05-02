@@ -1,0 +1,15 @@
+@namespace Kodepos
+@using System.Text.RegularExpressions;
+@inherits PosComponentBase
+
+@foreach (var fragment in _fragments.Span)
+{
+    if (!string.IsNullOrWhiteSpace(_regex) && Regex.IsMatch(fragment, _regex, CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
+    {
+        <mark class="@Class" style="@Style" @attributes="@Attributes">@fragment</mark>
+    }
+    else
+    {
+        @fragment
+    }
+}

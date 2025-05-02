@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace Kodepos.Components;
+namespace Kodepos;
 public abstract class PosComponentBase : ComponentBase
 {
     [Parameter(CaptureUnmatchedValues = true)]
@@ -10,13 +10,16 @@ public abstract class PosComponentBase : ComponentBase
 
     [Parameter]
     public string? Class { get; set; }
-    
+
     [Parameter]
     public ElementReference Ref { get; set; }
-    
+
     [Parameter]
     public string? Style { get; set; }
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? Id { get; set; }
 }

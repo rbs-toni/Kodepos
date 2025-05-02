@@ -1,12 +1,8 @@
-﻿@inherits PosComponentBase
+﻿@namespace Kodepos
+@inherits PosComponentBase
 
-<div class="fixed inset-0 bg-transparent data-[state=open]:block data-[state=closed]:hidden"
-     data-state="@(_open ? "open" : "closed")"
-     @onclick="() => _open = false">
-</div>
-
-<div class="relative">
-    <button class="flex pointer-events-auto z-50 h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate text-start w-[180px]" @onclick=OnClickHandler
+<div class="relative z-50" id="@($"dropdown-{_id}")">
+    <button class="flex pointer-events-auto h-9 items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate text-start w-[180px]" id="dropdown-trigger-@_id" @onclick=OnClickHandler
             type="button"
             aria-expanded="@_open"
             aria-haspopup="true"
@@ -16,23 +12,20 @@
         </span>
         <Icon Name="IconName.ChevronDown" Class="w-4 h-4 opacity-50 shrink-0" />
     </button>
-    <div id="dropdown-menu-@_id"
-         class="absolute end-0 mt-1 w-full max-h-96 min-w-32 overflow-hidden rounded-md border shadow-md data-[state=open]:block data-[state=open]:pointer-events-auto data-[state=closed]:hidden data-[state=closed]:pointer-events-none"
-         role="menu"
-         data-state="@(_open ?"open":"closed")">
+    <Popover Id="@($"dropdown-menu-{_id}")" Target="@($"dropdown-trigger-{_id}")" Class="mt-1 z-50 max-h-96 min-w-45 overflow-hidden rounded-md border shadow-md data-[state=open]:block data-[state=open]:pointer-events-auto data-[state=closed]:hidden data-[state=closed]:pointer-events-none" role="menu" data-state="@StateValue">
         <div class="p-1 w-full pointer-events-auto bg-popover text-popover-foreground ">
             @ChildContent
         </div>
-    </div>
+    </Popover>
 </div>
+<Backdrop ExceptId="@($"dropdown-menu-{_id}")" @bind-Visible=_open Class="z-40" />
 
 @code {
     bool _open;
     string? _title;
-    string _id = Guid.NewGuid().ToString("N");
-    List<DropdownItem> _items = new List<DropdownItem>();
-    internal DropdownItem? SelectedItem { get; set; }
-    internal Action? OnSelectionChanged;
+    string _id = Identifier.NewId();
+
+    string StateValue => _open ? "open" : "closed";
 
     [Parameter]
     public bool Open
@@ -69,36 +62,13 @@
     [Parameter]
     public EventCallback<string> TitleChanged { get; set; }
 
-    internal void Include(DropdownItem item)
-    {
-        if (_items.Contains(item) == false)
-        {
-            _items.Add(item);
-        }
-    }
-
-    internal void Exclude(DropdownItem item)
-    {
-        if (_items.Contains(item))
-        {
-            _items.Remove(item);
-        }
-    }
-
-    internal void OnSelectionHandler(DropdownItem item)
-    {
-        if (SelectedItem != item)
-        {
-            SelectedItem = item;
-            if (OnSelectionChanged != null)
-            {
-                OnSelectionChanged();
-            }
-        }
-    }
-
-    void OnClickHandler()
+    void OnClickHandler(MouseEventArgs args)
     {
         _open = !_open;
+    }
+
+    void Close()
+    {
+        _open = false;
     }
 }

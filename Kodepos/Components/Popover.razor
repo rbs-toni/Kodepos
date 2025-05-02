@@ -1,0 +1,18 @@
+﻿@namespace Kodepos
+@inherits PosComponentBase
+<div id="@Id" class="@ClassValue" style="@Style" @ref=Ref @attributes=Attributes>
+    @ChildContent
+</div>
+@code {
+    [Parameter, EditorRequired]
+    public string? Target { get; set; }
+
+    const string DefaultClassess = "fixed";
+
+    protected override void OnInitialized()
+    {
+        Id ??= Guid.NewGuid().ToString("N");
+    }
+
+    string? ClassValue => new CssBuilder().AddClass(Class).AddClass(DefaultClassess).Build();
+}

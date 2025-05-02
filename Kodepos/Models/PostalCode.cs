@@ -1,7 +1,4 @@
-﻿using Kodepos.Components;
-using System.Collections;
-using System.Text.Json.Serialization;
-
+﻿
 namespace Kodepos.Models;
 public class PostalCode
 {
@@ -17,7 +14,6 @@ public class PostalCode
 
     public async Task OnClickAsync(PosLeaflet posLeaflet)
     {
-        Console.WriteLine("OnClickAsync Called");
         await posLeaflet.SetViewAsync(new LatLng(Latitude, Longitude));
     }
 }

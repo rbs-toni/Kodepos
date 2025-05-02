@@ -1,5 +1,6 @@
-﻿<TableRow>
-    <TableCell Class="p-4 whitespace-nowrap align-middle text-sm text-foreground">
+﻿@namespace Kodepos
+<TableRow>
+    <TableCell Class="p-4 whitespace-nowrap align-middle text-sm text-foreground" colspan="@ColSpan">
         <div class="flex items-center justify-center py-10">
             @ChildContent
         </div>
@@ -9,4 +10,7 @@
 @code {
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public int ColSpan { get; set; } = 100;
  }

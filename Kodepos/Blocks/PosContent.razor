@@ -1,0 +1,147 @@
+﻿@namespace Kodepos
+
+<div class="grow mb-4">
+    <PosHero>
+        <PosDataStats ProvinceCount="Stats.ProvinceCount"
+                      RegencyCount="Stats.RegencyCount"
+                      DistrictCount="Stats.DistrictCount"
+                      VillageCount="Stats.VillageCount" />
+    </PosHero>
+    <div class="container mx-auto">
+        <div class="w-full z-50">
+            <div class="flex justify-between items-center py-4 flex-col md:flex-row gap-2">
+                <div class="w-full flex gap-2 z-100">
+                    <div class="relative group w-full max-w-sm">
+                        <input class="flex h-9 data-[state=open]:pr-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 max-w-sm"
+                               @ref=_searchInputRef
+                               type="text"
+                               autofocus
+                               @bind=_searchString
+                               @bind:event="oninput"
+                               @bind:after=DebounceSearchPostCodeAsync
+                               placeholder="Cari daerah..." />
+                        <button class="absolute top-0 end-0 size-9 hidden data-[state=open]:flex items-center justify-center" data-state="@(string.IsNullOrWhiteSpace(_searchString) ? "cosed":"open")" @onclick="OnClearAsync">
+                            <Icon Name="IconName.Delete" Class="size-5" />
+                        </button>
+                    </div>
+                    <Dropdown Title="Filter By">
+                        <DropdownItem>
+                            <div class="flex items-center space-x-2">
+                                <Switch Id="Kelurahan/Desa" @bind-Checked="@(_filterOptions["village"])" @bind-Checked:after="SearchPostCodeAsync" />
+                                <Label For="Kelurahan/Desa">Kelurahan/Desa</Label>
+                            </div>
+                        </DropdownItem>
+                        <DropdownItem>
+                            <div class="flex items-center space-x-2">
+                                <Switch Id="Kecamatan" @bind-Checked="@(_filterOptions["district"])" @bind-Checked:after="SearchPostCodeAsync" />
+                                <Label For="Kecamatan">Kecamatan</Label>
+                            </div>
+                        </DropdownItem>
+                        <DropdownItem>
+                            <div class="flex items-center space-x-2">
+                                <Switch Id="Kota/Kabupaten" @bind-Checked="@(_filterOptions["regency"])" @bind-Checked:after="SearchPostCodeAsync" />
+                                <Label For="Kota/Kabupaten">Kota/Kabupaten</Label>
+                            </div>
+                        </DropdownItem>
+                        <DropdownItem>
+                            <div class="flex items-center space-x-2">
+                                <Switch Id="Provinsi" @bind-Checked="@(_filterOptions["province"])" @bind-Checked:after="SearchPostCodeAsync" />
+                                <Label For="Provinsi">Provinsi</Label>
+                            </div>
+                        </DropdownItem>
+                    </Dropdown>
+                </div>
+
+                <div class="flex items-center gap-2 z-100">
+                    <Dropdown Title="Export">
+                        <DropdownItem Text="PDF" OnSelected=@(()=>ConvertDataAsync("pdf")) Disabled="!DataExist" />
+                        <DropdownItem Text="EXCEL" OnSelected=@(()=>ConvertDataAsync("xls")) Disabled="!DataExist" />
+                        <DropdownItem Text="CSV" OnSelected=@(()=>ConvertDataAsync("csv")) Disabled="!DataExist" />
+                    </Dropdown>
+                    <Dropdown @bind-Title="@_optionTitle">
+                        <DropdownItem Text="10" OnSelected="@(()=>ChangePageSizeAsync(10))" IsSelected="_pageSize==10" />
+                        <DropdownItem Text="25" OnSelected="@(()=>ChangePageSizeAsync(25))" IsSelected="_pageSize==25" />
+                        <DropdownItem Text="50" OnSelected="@(()=>ChangePageSizeAsync(50))" IsSelected="_pageSize==50" />
+                        <DropdownItem Text="100" OnSelected="@(()=>ChangePageSizeAsync(100))" IsSelected="_pageSize==100" />
+                    </Dropdown>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-md border z-40">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>#</TableHead>
+                        <TableHeadButton Title="Kodepos" OnClick="@(()=>SortByAsync("code"))" IsActive="@(_currentSort?.Name=="code")" />
+                        <TableHeadButton Title="Kelurahan/Desa" OnClick="@(()=>SortByAsync("village"))" IsActive="@(_currentSort?.Name=="village")" />
+                        <TableHeadButton Title="Kecamatan" OnClick="@(()=>SortByAsync("district"))" IsActive="@(_currentSort?.Name=="district")" />
+                        <TableHeadButton Title="Kota/Kabupaten" OnClick="@(()=>SortByAsync("regency"))" IsActive="@(_currentSort?.Name=="regency")" />
+                        <TableHeadButton Title="Provinsi" OnClick="@(()=>SortByAsync("province"))" IsActive="@(_currentSort?.Name=="province")" />
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    @if (PagedPostCode.Items?.Count > 0)
+                    {
+                        @foreach (var (item, idx) in PagedPostCode.Items.Select((x, y) => (x, y)))
+                        {
+                            <TableRow>
+                                <TableCell>@(idx + 1)</TableCell>
+                                <TableCell>
+                                    @item.Code
+                                </TableCell>
+                                <TableCell>
+                                    <Highlighter Text="@item.Village" HighlightedText="@_searchString"></Highlighter>
+                                </TableCell>
+                                <TableCell>
+                                    <Highlighter Text="@item.District" HighlightedText="@_searchString"></Highlighter>
+                                </TableCell>
+                                <TableCell>
+                                    <Highlighter Text="@item.Regency" HighlightedText="@_searchString"></Highlighter>
+                                </TableCell>
+                                <TableCell>
+                                    <Highlighter Text="@item.Province" HighlightedText="@_searchString"></Highlighter>
+                                </TableCell>
+                            </TableRow>
+                        }
+                    }
+                    else if (PagedPostCode.Items?.Count == 0)
+                    {
+                        <TableEmpty>
+                            <div class="text-center">
+                                <p class="text-sm text-muted-foreground">
+                                    <span class="font-semibold">Tidak ada data ditemukan</span>
+                                    untuk kata kunci
+                                    <em class="text-primary font-medium">"@_searchString"</em>
+                                    pada kolom
+                                    <span class="underline underline-offset-2 font-medium text-muted-foreground">
+                                        @(string.Join(", ", ActiveFilters))
+                                    </span>.
+                                </p>
+                            </div>
+                        </TableEmpty>
+                    }
+                    else
+                    {
+                        <TableEmpty>
+                            <div class="text-center">
+                                <Loader />
+                            </div>
+                        </TableEmpty>
+                    }
+                </TableBody>
+            </Table>
+        </div>
+        <div class="flex items-center justify-end space-x-2 py-4">
+            <div class="flex-1 text-xs md:text-sm text-muted-foreground">Halaman @_currentPage dari @PagedPostCode.TotalPages total halaman. </div>
+            <div class="space-x-2">
+                <PosPagingPrevButton Title="Sebelumnya" Disabled="!PagedPostCode.HasPrevious" OnClick="GoPrevAsync" />
+                <PosPagingNextButton Title="Selanjutnya" Disabled="!PagedPostCode.HasNext" OnClick="GoNextAsync" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    bool DataExist => PagedPostCode.Items?.Count > 0;
+}

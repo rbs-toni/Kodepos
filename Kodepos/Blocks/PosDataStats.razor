@@ -1,0 +1,34 @@
+﻿@namespace Kodepos
+
+<div class="grid grid-cols-4 gap-6 md:grid-cols-4 md:gap-8 mt-6">
+    <div class="text-center">
+        <h3 class="text-primary mb-2 text-2xl font-bold md:text-4xl">@ProvinceCount</h3>
+        <p class="text-muted-foreground font-normal md:font-medium">Provinsi</p>
+    </div>
+    <div class="text-center">
+        <h3 class="text-primary mb-2 text-2xl font-bold md:text-4xl">@RegencyCount</h3>
+        <p class="text-muted-foreground font-normal md:font-medium">Kabupaten/Kota</p>
+    </div>
+    <div class="text-center">
+        <h3 class="text-primary mb-2 text-2xl font-bold md:text-4xl">@DistrictCount</h3>
+        <p class="text-muted-foreground font-normal md:font-medium">Kecamatan</p>
+    </div>
+    <div class="text-center">
+        <h3 class="text-primary mb-2 text-2xl font-bold md:text-4xl">@VillageCount</h3>
+        <p class="text-muted-foreground font-normal md:font-medium">Kelurahan/Desa</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int ProvinceCount { get; set; }
+
+    [Parameter]
+    public int RegencyCount { get; set; }
+
+    [Parameter]
+    public int DistrictCount { get; set; }
+
+    [Parameter]
+    public int VillageCount { get; set; }
+}

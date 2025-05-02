@@ -1,17 +1,18 @@
 {
   "name": "kodepos",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "npx @tailwindcss/cli -i ./Styles/index.css -o ./wwwroot/kodepos.css --watch"
+    "dev": "node ./esbuild.config.mjs && npx @tailwindcss/cli -i ./Styles/index.css -o ./wwwroot/kodepos.css --watch"
   },
   "author": "Rantoni Pasaribu",
   "license": "MIT",
   "devDependencies": {
-    "sass": "^1.84.0"
-  },
-  "dependencies": {
+    "@floating-ui/dom": "^1.7.0",
     "@tailwindcss/cli": "^4.1.5",
+    "esbuild": "^0.25.3",
+    "rimraf": "^6.0.1",
+    "sass": "^1.84.0",
     "tailwindcss": "^4.1.5",
     "tw-animate-css": "^1.2.8"
   }
