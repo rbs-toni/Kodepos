@@ -133,7 +133,7 @@
             </Table>
         </div>
         <div class="flex items-center justify-end space-x-2 py-4">
-            <div class="flex-1 text-xs md:text-sm text-muted-foreground">Halaman @_currentPage dari @PagedPostCode.TotalPages total halaman. </div>
+            <div class="flex-1 text-xs md:text-sm text-muted-foreground">Halaman @PagedPostCode.Page dari @PagedPostCode.TotalPages total halaman. </div>
             <div class="space-x-2">
                 <PosPagingPrevButton Title="Sebelumnya" Disabled="!PagedPostCode.HasPrevious" OnClick="GoPrevAsync" />
                 <PosPagingNextButton Title="Selanjutnya" Disabled="!PagedPostCode.HasNext" OnClick="GoNextAsync" />
