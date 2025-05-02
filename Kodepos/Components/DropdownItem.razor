@@ -1,0 +1,67 @@
+﻿@inherits PosComponentBase
+@implements IDisposable
+
+<div class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[selected]:bg-accent data-[selected]:text-accent-foreground "
+data-selected="@IsSelected" @onclick=OnClickHandler>
+    <span class="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
+        <span aria-hidden="true">
+            @if (IsSelected)
+            {
+                <svg xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-check-icon h-4 w-4">
+                    <path d="M20 6 9 17l-5-5"></path>
+                </svg>
+            }
+        </span>
+    </span>
+    <span>
+        @Text
+    </span>
+</div>
+
+@code {
+    [CascadingParameter]
+    Dropdown? Parent { get; set; }
+
+    [Parameter]
+    public string? Text { get; set; }
+
+    public bool IsSelected => Parent?.SelectedItem == this;
+
+    [Parameter]
+    public EventCallback<string> OnSelected { get; set; }
+
+    void OnClickHandler()
+    {
+        OnSelected.InvokeAsync(Text);
+        if (Parent != null)
+        {
+            Parent.OnSelectionHandler(this);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        if (Parent != null)
+        {
+            Parent.Include(this);
+            Parent.OnSelectionChanged += () => InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (Parent != null)
+        {
+            Parent.Exclude(this);
+        }
+    }
+}

@@ -1,0 +1,11 @@
+﻿<tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted" @attributes=Attributes>
+    @ChildContent
+</tr>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object>? Attributes { get; set; }
+}

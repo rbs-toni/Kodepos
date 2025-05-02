@@ -1,0 +1,13 @@
+﻿.animate {
+    color: var(--pos-c-white)
+}
+
+.animate-spin {
+    animation: spin
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

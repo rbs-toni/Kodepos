@@ -1,0 +1,18 @@
+{
+  "name": "kodepos",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx @tailwindcss/cli -i ./Styles/index.css -o ./wwwroot/kodepos.css --watch"
+  },
+  "author": "Rantoni Pasaribu",
+  "license": "MIT",
+  "devDependencies": {
+    "sass": "^1.84.0"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.5",
+    "tailwindcss": "^4.1.5",
+    "tw-animate-css": "^1.2.8"
+  }
+}

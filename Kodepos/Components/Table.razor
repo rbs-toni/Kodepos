@@ -1,0 +1,10 @@
+﻿ <div class="relative w-full overflow-auto">
+     <table class="w-full caption-bottom text-sm">
+        @ChildContent
+     </table>
+ </div>
+
+ @code{
+     [Parameter]
+     public RenderFragment? ChildContent { get; set; }
+ }

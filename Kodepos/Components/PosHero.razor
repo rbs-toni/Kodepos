@@ -1,0 +1,22 @@
+﻿<div class="container mx-auto px-4 py-24 md:px-6 lg:py-32 2xl:max-w-[1400px]">
+    <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+        <div>
+            <h1 class="mb-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">Cari kode pos</h1>
+            <p class="text-muted-foreground mb-6 text-xl">Temukan informasi lengkap kode pos seluruh daerah Indonesia.</p>
+            @StatsContent
+        </div>
+        <div class="relative aspect-video overflow-hidden rounded-xl">
+            <div class="h-full w-full">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? StatsContent { get; set; }
+}

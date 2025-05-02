@@ -1,0 +1,122 @@
+﻿<div class="grow mb-4">
+    <PosHero>
+        <StatsContent>
+            <PosStats ProvinceCount="Stats.ProvinceCount"
+                      RegencyCount="Stats.RegencyCount"
+                      DistrictCount="Stats.DistrictCount"
+                      VillageCount="Stats.VillageCount" />
+        </StatsContent>
+        <ChildContent>
+            <PosLeaflet @ref="_postLeafLet" />
+        </ChildContent>
+    </PosHero>
+    <div class="container mx-auto sticky top-0">
+        <div class="w-full sticky top-0 z-90">
+            <div class="flex items-center py-4">
+                <input class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 max-w-sm"
+                       type="text"
+                       autofocus
+                       @bind=_searchString
+                       @bind:after=SearchPostCodeAsync
+                       placeholder="Cari kodepos..." />
+                <div class="ml-auto flex items-center gap-2">
+                    <Dropdown Title="Export">
+                        <DropdownItem Text="PDF" />
+                        <DropdownItem Text="EXCEL" />
+                        <DropdownItem Text="CSV" />
+                    </Dropdown>
+                    <Dropdown @bind-Title="@_optionTitle" @bind-Open="_pageSizeOptionOpen">
+                        <DropdownItem Text="10" OnSelected="@(()=>ChangePageSizeAsync(10))" />
+                        <DropdownItem Text="25" OnSelected="@(()=>ChangePageSizeAsync(25))" />
+                        <DropdownItem Text="50" OnSelected="@(()=>ChangePageSizeAsync(50))" />
+                        <DropdownItem Text="100" OnSelected="@(()=>ChangePageSizeAsync(100))" />
+                    </Dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="rounded-md border">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>#</TableHead>
+                        <TableHeadButton Title="Kodepos" OnClick="@(()=>SortByAsync("code"))" />
+                        <TableHeadButton Title="Kelurahan/Desa" OnClick="@(()=>SortByAsync("village"))" />
+                        <TableHeadButton Title="Kecamatan" OnClick="@(()=>SortByAsync("district"))" />
+                        <TableHeadButton Title="Kota/Kabupaten" OnClick="@(()=>SortByAsync("regency"))" />
+                        <TableHeadButton Title="Provinsi" OnClick="@(()=>SortByAsync("province"))" />
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    @if (PagedPostCode.Items?.Count > 0)
+                    {
+                        @foreach (var (item, idx) in PagedPostCode.Items.Select((x, y) => (x, y)))
+                        {
+                            <TableRow @onclick=@(() => item.OnClickAsync(_postLeafLet))>
+                                <TableCell>@(idx + 1)</TableCell>
+                                <TableCell>@item.Code</TableCell>
+                                <TableCell>@item.Village</TableCell>
+                                <TableCell>@item.District</TableCell>
+                                <TableCell>@item.Regency</TableCell>
+                                <TableCell>@item.Province</TableCell>
+                            </TableRow>
+                        }
+                    }
+                    else
+                    {
+                        <TableEmpty>
+                            <div class="text-center">
+                                <p class="text-sm text-muted-foreground">
+                                    Tidak ada data ditemukan
+                                </p>
+                            </div>
+                        </TableEmpty>
+                    }
+                </TableBody>
+            </Table>
+        </div>
+        <div class="flex items-center justify-end space-x-2 py-4">
+            <div class="flex-1 text-sm text-muted-foreground">Halaman @_currentPage dari @PagedPostCode.TotalPages total halaman. </div>
+            <div class="space-x-2">
+                <PrevButton Title="Sebelumnya" Disabled="!PagedPostCode.HasPrevious" OnClick="GoPrevAsync" />
+                <NextButton Title="Selanjutnya" Disabled="!PagedPostCode.HasNext" OnClick="GoNextAsync" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    string? _searchString;
+    string? _optionTitle;
+
+    bool _pageSizeOptionOpen;
+
+    async Task GoNextAsync()
+    {
+        if (PagedPostCode.HasNext)
+        {
+            _currentPage += 1;
+            await SearchPostCodeAsync();
+        }
+    }
+
+    async Task GoPrevAsync()
+    {
+        if (PagedPostCode.HasPrevious)
+        {
+            _currentPage -= 1;
+            await SearchPostCodeAsync();
+        }
+    }
+
+    async Task ChangePageSizeAsync(int pageSize)
+    {
+        _pageSizeOptionOpen = false;
+        if (_pageSize != pageSize)
+        {
+            _pageSize = pageSize;
+            _optionTitle = _pageSize.ToString();
+            _currentPage = 1;
+            await SearchPostCodeAsync();
+        }
+    }
+}
